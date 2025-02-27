@@ -1,1 +1,108 @@
-define(["../config","../../106693 - Common.Framework.Extensions.TabItemsCountRbClass (5515)/ViewModels/TabItemsCountRbClassController","../../107737 - Sales.SalesDraftRbClass (6343)/ViewModels/SalesDraftRbClassController"],function(m,f,p){"use strict";return["componentDataService","newItemNotificationService","gettext","keyboardManagerService","$scope","$rootScope","$timeout",function(e,a,r,t,n,o,s){var d=this,c=e.getInstance(this);function l(e){return e?e.firstName?`${e.firstName} ${e.lastName}`:e.lastName:""}d.currencyDatasource=[],d.moreThanOneCurrencyAvailable=!1,d.moreThanOneAddressAvailable=!1,d.notificationParams={objectType:"COA"},d.dataSource=c.CreateKendoDatasource({url:m.dataSources.orders.url,schema:{data:function(e){if(e.salesOrders)return d.currency=e.salesOrders&&0<e.salesOrders.length?`/${e.salesOrders[0].totalsConverted.currency}`:null,e.salesOrders.forEach(e=>{e.management?(e.management.planner.displayName=l(e.management.planner),e.management.projectLeader.displayName=l(e.management.projectLeader),e.management.documentController.displayName=l(e.management.documentController)):e.management={planner:{displayName:""},projectLeader:{displayName:""},documentController:{displayName:""}}}),e.salesOrders},total:function(e){return e.paging.size},model:{id:"salesOrderId"}}}),d.onChange=function(e){e=e.sender.dataItem(e.sender.select());c.changeUrlParameter("orderId",e.id)},d.createNewParams={module:"sales",objectType:"orders",documentCreated:function(e){c.changeUrlParameter("orderId",e),d.dataSource.reloadCurrentPage(),c.activateTab("Items")}},d.focus=function(){t.bind("D",function(){$("#tsk_popoverCreateOrderBtn").trigger("click")})},d.onHTMLLoaded=function(){$(document).ready(function(){$("#orders").next().find("button").after($("#tsk_popoverCreateOrderBtn"))}),u()},d.onParametersChanged=function(){u()},d.createNewDraft=function(){const e=new p.default(c);c.activateTab("Add product"),e.createDraft("orders").then(function(e){toastr.success(r("Sales order draft successfully created"));e=e.salesOrder.salesOrderId;$("[rb-splitter]").data("kendoSplitter").options.collapseFirstPaneFromOutside(),c.changeUrlParameter("orderId",e),d.dataSource.reloadCurrentPage(),s(()=>{o.$broadcast("AddProduct_cleanQuickFilters")})})},d.userNavigate=function(e){c.rbNavigate("PER/"+e,"subid=10")};e=[{tabRef:"Items",url:m.dataSources.items.url,urlParameters:["orderId"]}];let i=new f.default(c,e);function u(){i&&i.setTabCounters()}i.setTabCounters(),n.$on("onNewItemCreated",()=>u())}]});
+define(["../config", "../../106693 - Common.Framework.Extensions.TabItemsCountRbClass (5515)/ViewModels/TabItemsCountRbClassController", "../../107737 - Sales.SalesDraftRbClass (6343)/ViewModels/SalesDraftRbClassController"], function (m, f, p) {
+    "use strict";
+    return ["componentDataService", "newItemNotificationService", "gettext", "keyboardManagerService", "$scope", "$rootScope", "$timeout", function (componentDataService, newItemNotificationService, gettext, keyboardManagerService, $scope, $rootScope, $timeout) {
+        var vm = this,
+            instance = componentDataService.getInstance(this);
+
+        function getDisplayName(person) {
+            return person ? (person.firstName ? `${person.firstName} ${person.lastName}` : person.lastName) : "";
+        }
+
+        vm.currencyDatasource = [];
+        vm.moreThanOneCurrencyAvailable = false;
+        vm.moreThanOneAddressAvailable = false;
+        vm.notificationParams = { objectType: "COA" };
+
+        vm.dataSource = instance.CreateKendoDatasource({
+            url: m.dataSources.orders.url,
+            schema: {
+                data: function (response) {
+                    if (response.salesOrders) {
+                        vm.currency = response.salesOrders.length > 0 ? `/${response.salesOrders[0].totalsConverted.currency}` : null;
+                        response.salesOrders.forEach(order => {
+                            if (order.management) {
+                                order.management.planner.displayName = getDisplayName(order.management.planner);
+                                order.management.projectLeader.displayName = getDisplayName(order.management.projectLeader);
+                                order.management.documentController.displayName = getDisplayName(order.management.documentController);
+                            } else {
+                                order.management = {
+                                    planner: { displayName: "" },
+                                    projectLeader: { displayName: "" },
+                                    documentController: { displayName: "" }
+                                };
+                            }
+                        });
+                    }
+                    return response.salesOrders;
+                },
+                total: function (response) {
+                    return response.paging.size;
+                },
+                model: { id: "salesOrderId" }
+            }
+        });
+
+        vm.onChange = function (event) {
+            var selectedItem = event.sender.dataItem(event.sender.select());
+            instance.changeUrlParameter("orderId", selectedItem.id);
+        };
+
+        vm.createNewParams = {
+            module: "sales",
+            objectType: "orders",
+            documentCreated: function (orderId) {
+                instance.changeUrlParameter("orderId", orderId);
+                vm.dataSource.reloadCurrentPage();
+                instance.activateTab("Items");
+            }
+        };
+
+        vm.focus = function () {
+            keyboardManagerService.bind("D", function () {
+                $("#tsk_popoverCreateOrderBtn").trigger("click");
+            });
+        };
+
+        vm.onHTMLLoaded = function () {
+            $(document).ready(function () {
+                $("#orders").next().find("button").after($("#tsk_popoverCreateOrderBtn"));
+            });
+            updateTabCounters();
+        };
+
+        vm.onParametersChanged = function () {
+            updateTabCounters();
+        };
+
+        vm.createNewDraft = function () {
+            const salesDraftController = new p.default(instance);
+            instance.activateTab("Add product");
+            salesDraftController.createDraft("orders").then(function (response) {
+                toastr.success(gettext("Sales order draft successfully created"));
+                var orderId = response.salesOrder.salesOrderId;
+                $("[rb-splitter]").data("kendoSplitter").options.collapseFirstPaneFromOutside();
+                instance.changeUrlParameter("orderId", orderId);
+                vm.dataSource.reloadCurrentPage();
+                $timeout(() => {
+                    $rootScope.$broadcast("AddProduct_cleanQuickFilters");
+                });
+            });
+        };
+
+        vm.userNavigate = function (subId) {
+            instance.rbNavigate("PER/" + subId, "subid=10");
+        };
+
+        var tabItems = [{ tabRef: "Items", url: m.dataSources.items.url, urlParameters: ["orderId"] }];
+        let tabItemsCountController = new f.default(instance, tabItems);
+
+        function updateTabCounters() {
+            if (tabItemsCountController) {
+                tabItemsCountController.setTabCounters();
+            }
+        }
+
+        tabItemsCountController.setTabCounters();
+        $scope.$on("onNewItemCreated", () => updateTabCounters());
+    }];
+});
