@@ -31,11 +31,13 @@ define([
                     data: function (data) {
                         console.log("Processing sales orders data", data);
                         if (data.salesOrders) {
+                            // Determine the currency from the first sales order
                             vm.currency = (data.salesOrders.length > 0) 
                                 ? `/${data.salesOrders[0].totalsConverted.currency}` 
                                 : null;
                             console.log("Currency set to", vm.currency);
                             
+                            // Process each sales order to set display names for management roles
                             data.salesOrders.forEach(function (order) {
                                 if (order.management) {
                                     order.management.planner.displayName = getDisplayName(order.management.planner);
