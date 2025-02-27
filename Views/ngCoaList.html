@@ -1,0 +1,232 @@
+<div ng-include="vm.folderPath+'/views/Templates.html'"></div>
+<div style="height:100%">        
+    <div data-rb-grid 
+         access-rule="100142" 
+         id="orders"
+         data-k-data-source="vm.dataSource"
+         data-lookupcomponents='{
+           "ContainingNotificationTypeId": { "name": "NotificationTypeLookup", "params": "vm.notificationParams" },
+           "AccountManager": { "name": "EmployeeLookup" },
+           "Assignee": { "name": "EmployeeLookup" },
+           "SalesAssistant": { "name": "EmployeeLookup" },
+           "Planner": { "name": "EmployeeLookup" },
+           "ProjectLeader": { "name": "EmployeeLookup" },
+           "DocumentController": { "name": "EmployeeLookup" }}'
+         data-rb-addnewcomponent="CreateNewDocumentPopover"
+         data-rb-addnewparams="vm.createNewParams" 
+         data-rb-addnewlabel="{{'Create new order' | translate}}"           
+         data-k-on-change="vm.onChange(kendoEvent)"
+         data-default-filter="Name,FirstName,SalesOrderId"
+         data-k-reorderable="true"
+         data-k-resizable="true"
+         data-rb-message-field="highlightedNotification.translatedMessage"
+         data-selectrow="orderId" 
+         data-k-columns='[
+            {
+                "field": "status",
+                "title":"St"|translate,
+                "width": 33
+            },
+            {
+                "field": "salesOrderId",
+                "title":"Id"|translate,
+                "width": 60
+            },
+            {
+                "field":  "initialSalesOrder.salesOrderId",
+                "title":  "InitialId"|translate,
+                "hidden": true,
+                "width":  60
+            },
+            {
+                "field": "type", 
+                "title":"Type"|translate,
+                "hidden":true,
+                "width": 45
+            },
+            {
+                "field": "createdAt",
+                "title":"Created at"|translate,
+                "hidden":true,
+                "type":"datetime",
+                "width": 45
+            },
+            {
+                "field": "registrationDate",
+                "title":"Registration date"|translate,
+                "type":"date",
+                "width": 110
+            },
+            {
+                "field": "customer.customerId",
+                "title":"Customer id"|translate,
+                "hidden":true,
+                "width": 75,
+                "lookupComponent": "CustomerLookup"
+            },
+            {
+                "field": "customer.name",
+                "title":"Name"|translate
+            },
+            {
+                "field": "customer.firstname",
+                "title":"First name"|translate,
+                "hidden":true                
+            },
+            {
+                "field": "customersReference",
+                "title":"Customers ref."|translate,
+                "hidden":true,
+                "width": 75
+            },
+            {
+                "field": "customersReferenceNumber",
+                "title":"Customers ref. no"|translate,
+                "hidden":true,
+                "width": 120
+            },            
+            {
+                "field": "sellersReferenceNumber",
+                "title":"Sellers ref. no"|translate,
+                "hidden":true,
+                "width": 75
+            },            
+            {
+                "field": "totals.subTotalAmount",
+                "title":"Subtotal"|translate,
+                "width": 90,
+                "type": "decimal",
+                "format":"{0:n2}",
+                "attributes": {
+                    "style": "text-align: right"                   
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            },
+            {
+                "field": "totalsConverted.subTotalAmount",
+                "headerTemplate": "<div><span>{{"Conv. subtot. amt." | translate}} <span ng-bind=\"vm.currency\" ></span> </span><div>",
+                "type": "decimal",
+                "format":"{0:n2}",
+                "width": 140,
+                "hidden":true,
+                "attributes": {
+                    "style": "text-align: right"
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            },
+            {
+                "field": "totals.vATAmount",
+                "title":"VAT"|translate,
+                "hidden":true,
+                "width": 90,
+                "type": "decimal",
+                "format":"{0:n2}",
+                "attributes": {
+                    "style": "text-align: right"                   
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            },
+            {
+                "field": "totals.feeAmount",
+                "title":"Fee amount"|translate,
+                "hidden":true,
+                "width": 90,
+                "type": "decimal",
+                "format":"{0:n2}",
+                "attributes": {
+                    "style": "text-align: right"                   
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            }, 
+            {
+                "field": "totals.freightAmount",
+                "title":"Freight amount"|translate,
+                "hidden":true,
+                "width": 90,
+                "type": "decimal",
+                "format":"{0:n2}",
+                "attributes": {
+                    "style": "text-align: right"                   
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            },
+            {
+                "field": "totals.totalAmount",
+                "title":"Total amount"|translate,
+                "hidden":true,
+                "width": 90,
+                "type": "decimal",
+                "format":"{0:n2}",
+                "attributes": {
+                    "style": "text-align: right"                   
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            }, 
+            {
+                "field": "totalsConverted.totalAmount",
+                "headerTemplate": "<div><span>{{"Conv. tot. amt." | translate}} <span ng-bind=\"vm.currency\" ></span> </span><div>",
+                "type": "decimal",
+                "format":"{0:n2}",
+                "width": 125,
+                "hidden":true,
+                "attributes": {
+                    "style": "text-align: right"
+                },
+                "headerAttributes": {
+                    "style": "text-align: right"
+                }
+            },           
+            {
+                "field": "totals.currency",
+                "title":"Currency"|translate,
+                "width": 70
+            },
+            {
+                "field": "highlightedNotification.translatedMessage",
+                "title":"Highlighted notification"|translate,
+                "hidden":true,
+                "width": 1
+            },
+            {
+              "title":    "Planner"|translate,
+              "hidden":   true,
+              "width":    120,
+              "template": "<div ng-if=\"dataItem.management.planner.employeeId\"><span>#= management.planner.displayName #</span><i title=\"View user\" class=\"icon-link-ext-alt pointer\" ng-click=\"vm.userNavigate(dataItem.management.planner.employeeId)\"></i></div>"
+            },
+            {
+              "title":    "Project leader"|translate,
+              "hidden":   true,
+              "width":    120,
+              "template": "<div ng-if=\"dataItem.management.projectLeader.employeeId\"><span>#= management.projectLeader.displayName #</span><i title=\"View user\" class=\"icon-link-ext-alt pointer\" ng-click=\"vm.userNavigate(dataItem.management.projectLeader.employeeId)\"></i></div>"
+            },
+            {
+              "title":    "Document controller"|translate,
+              "hidden":   true,
+              "width":    120,
+              "template": "<div ng-if=\"dataItem.management.documentController.employeeId\"><span>#= management.documentController.displayName #</span><i title=\"View user\" class=\"icon-link-ext-alt pointer\" ng-click=\"vm.userNavigate(dataItem.management.documentController.employeeId)\"></i></div>"
+            }
+         ]'>
+    </div>
+</div>
+
+<button  class="rb-AddNewBtn k-button "
+        access-rule="100142"
+        shortcut="D"
+	    access-doc="COA/{orderId}"
+        id="tsk_popoverCreateOrderBtn"
+        ng-click="vm.createNewDraft();">
+        <i class="icon-plus"></i>
+        <span class="text">{{'Create new draft' | translate}}</span>
+</button>
