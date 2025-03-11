@@ -24,16 +24,19 @@ define([
             
             vm.notificationParams = { objectType: "COA" };
             
+            // Initialize the data source for sales orders
             vm.dataSource = dataService.CreateKendoDatasource({
                 url: cfg.dataSources.orders.url,
                 schema: {
                     data: function (data) {
                         console.log("Processing sales orders data", data);
                         if (data.salesOrders) {
+                            // Determine the currency based on the first sales order
                             vm.currency = (data.salesOrders.length > 0) 
                                 ? `/${data.salesOrders[0].totalsConverted.currency}` 
                                 : null;
                             
+                            // Process each sales order to set display names for management roles
                             data.salesOrders.forEach(function (order) {
                                 if (order.management) {
                                     order.management.planner.displayName = getDisplayName(order.management.planner);
@@ -61,6 +64,7 @@ define([
                 }
             });
             
+            // Handle changes in the data source selection
             vm.onChange = function (arg) {
                 console.log("Data source change event triggered", arg);
                 var selectedItem = arg.sender.dataItem(arg.sender.select());
@@ -68,6 +72,7 @@ define([
                 dataService.changeUrlParameter("orderId", selectedItem.id);
             };
             
+            // Parameters for creating a new sales order
             vm.createNewParams = {
                 module: "sales",
                 objectType: "orders",
@@ -79,6 +84,7 @@ define([
                 }
             };
             
+            // Bind keyboard shortcut for creating a new order
             vm.focus = function () {
                 console.log("Binding keyboard shortcut for creating new order");
                 keyboardManagerService.bind('D', function () {
@@ -86,6 +92,7 @@ define([
                 });
             };
             
+            // Handle HTML content loaded event
             vm.onHTMLLoaded = function () {
                 console.log("HTML content loaded");
                 $(document).ready(function () {
@@ -95,11 +102,13 @@ define([
                 recalculateTabCounts();
             };
             
+            // Handle parameter changes and recalculate tab counts
             vm.onParametersChanged = function () {
                 console.log("Parameters changed, recalculating tab counts");
                 recalculateTabCounts();
             };
             
+            // Create a new sales draft
             vm.createNewDraft = function () {
                 console.log("Creating new sales draft");
                 var salesDraftInstance = new SDC.default(dataService);
