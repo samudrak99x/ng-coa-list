@@ -24,7 +24,6 @@ define([
             
             vm.notificationParams = { objectType: "COA" };
             
-            // Initialize the Kendo data source for sales orders
             vm.dataSource = dataService.CreateKendoDatasource({
                 url: cfg.dataSources.orders.url,
                 schema: {
@@ -62,7 +61,6 @@ define([
                 }
             });
             
-            // Handle change event for the data source
             vm.onChange = function (arg) {
                 console.log("Data source change event triggered", arg);
                 var selectedItem = arg.sender.dataItem(arg.sender.select());
@@ -81,7 +79,6 @@ define([
                 }
             };
             
-            // Bind keyboard shortcut for creating a new order
             vm.focus = function () {
                 console.log("Binding keyboard shortcut for creating new order");
                 keyboardManagerService.bind('D', function () {
@@ -89,7 +86,6 @@ define([
                 });
             };
             
-            // Handle HTML loaded event
             vm.onHTMLLoaded = function () {
                 console.log("HTML content loaded");
                 $(document).ready(function () {
@@ -99,13 +95,11 @@ define([
                 recalculateTabCounts();
             };
             
-            // Handle parameter changes
             vm.onParametersChanged = function () {
                 console.log("Parameters changed, recalculating tab counts");
                 recalculateTabCounts();
             };
             
-            // Create a new sales draft
             vm.createNewDraft = function () {
                 console.log("Creating new sales draft");
                 var salesDraftInstance = new SDC.default(dataService);
